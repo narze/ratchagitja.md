@@ -5,7 +5,7 @@
 ## Rules
 
 - แปลงตรงตามตัวอักษร
-- ตัวเลขไทยทั้งหมดแปลงเป็นเลขอารบิก
+- ตัวเลขไทยทั้งหมดแปลงเป็นเลขอารบิก (ใช้ [UnSarabun](https://github.com/narze/unsarabun.js) ช่วยได้)
 - มี Metadata ที่จำเป็น (ใช้ [YAML Frontmatter](https://markdoc.dev/docs/frontmatter))
   - วัน/เดือน/ปี ที่ประกาศ (ปีเป็น พ.ศ.)
   - หมวด เลขเล่ม เลขตอน

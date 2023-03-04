@@ -1,0 +1,20 @@
+{
+  "name": "ratchagitja-scraper",
+  "version": "1.0.0",
+  "description": "scraper ratchakitcha from the website",
+  "main": "dist/index.js",
+  "scripts": {
+    "scrape": "npx ts-node ./src/index.ts"
+  },
+  "author": "",
+  "dependencies": {
+    "date-fns": "^2.29.3",
+    "dayjs": "^1.11.7",
+    "node-xlsx": "^0.21.0",
+    "object-hash": "^3.0.0",
+    "puppeteer": "^19.7.2"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  }
+}

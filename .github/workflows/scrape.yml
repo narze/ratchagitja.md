@@ -1,0 +1,31 @@
+name: ratchagitja scraper
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # every day at midnight
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "npm"
+      - run: npm install
+        working-directory: ./scraper
+      - run: npm run scrape
+        working-directory: ./scraper
+      - name: commit file
+        run: |
+          git config --local user.email "ratchagitja@users.noreply.github.com"
+          git config --local user.name "ratchagitja"
+          git add ./data/ratchakitcha.csv
+          if ! git diff-index --quiet HEAD ./data/ratchakitcha.csv; then
+            git commit -m "docs: auto update ratchakitcha.csv"
+            git push
+          fi

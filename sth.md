@@ -7,5 +7,3 @@ category: ฉบับกฤษฎีกา ประเภท ก
 ตอนที่: 10
 source: https://ratchakitcha.soc.go.th/documents/140A010N0000000010100.pdf
 ---
-
-abc

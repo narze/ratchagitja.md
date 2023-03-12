@@ -1,0 +1,26 @@
+lockfileVersion: 5.4
+
+specifiers:
+  pdf.js-extract: ^0.2.1
+
+dependencies:
+  pdf.js-extract: 0.2.1
+
+packages:
+
+  /dommatrix/0.0.24:
+    resolution: {integrity: sha512-PatEhAW5pIHr28MvFQGV5iiHNloqvecQZlxs7/8s/eulLqZI3uVqPkrO7YDuqsebovr/9mmcWDSWzVG4amEZgQ==}
+    dev: false
+
+  /pdf.js-extract/0.2.1:
+    resolution: {integrity: sha512-oUs5KaTVCelIyiBajCx3zAZKurkN9oVwRdqbSeDqeofddxNuwJRur86fCETvKZ/tX5nZJUSZWq3ie76PsArz7A==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      dommatrix: 0.0.24
+      web-streams-polyfill: 3.2.0
+    dev: false
+
+  /web-streams-polyfill/3.2.0:
+    resolution: {integrity: sha512-EqPmREeOzttaLRm5HS7io98goBgZ7IVz79aDvqjD0kYXLtFZTc0T/U6wHTPKyIjb+MdN7DFIIX6hgdBEpWmfPA==}
+    engines: {node: '>= 8'}
+    dev: false

@@ -1,4 +1,5 @@
 const PDFExtract = require("pdf.js-extract").PDFExtract
+const { parse } = require("date-fns")
 const axios = require("axios")
 const csv = require("csv-parser")
 const matter = require("gray-matter")
@@ -58,7 +59,7 @@ async function downloadAndExtract(filename, entry) {
   const data = Object.assign({}, templateData)
 
   data.name = name
-  data.date = new Date(date).toISOString().split("T")[0]
+  data.date = parse(date, "dd/MM/yyyy", 0).toISOString().split("T")[0]
   data.category = category
   data.volume = +volume
   data.section = +section

@@ -39,6 +39,7 @@ async function scrape() {
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             downloadButton.click();
+            // TODO: listen download finished instead of delay
             await new Promise(resolve => setTimeout(resolve, 5000));
         }
     });

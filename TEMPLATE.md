@@ -10,6 +10,8 @@ category: "ก"
 volume: 123
 # ตอนที่
 section: 15
+# หน้า (เฉพาะหน้าแรก)
+page: 1
 # URL ที่มาของประกาศ
 source: "https://ratchakitcha.soc.go.th/documents/00000000000000000.pdf"
 ---

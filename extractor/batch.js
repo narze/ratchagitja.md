@@ -64,6 +64,7 @@ async function downloadAndExtract(filename, entry) {
   data.section = +section
   data.page = subPage ? `${page} ${subPage}` : +page
   data.source = url
+  data.draft = true
 
   const pdfExtract = new PDFExtract()
   const options = {} /* see below */

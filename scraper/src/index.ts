@@ -86,20 +86,41 @@ async function excelToCSV() {
                     let row: Row = rawRow.map(col => col.toString()) as Row
 
                     // clean title that can break the csv
-                    row[1] = row[1].replace(/(\r\n|\n|\r|\,)/gm, '')
+                    if (row[1]) {
+                        row[1] = row[1].replace(/(\r\n|\n|\r|\,)/gm, '')
+                    }
 
-                    // generate id by hash
-                    const id = hash(row)
+                    // generate id by hash ('เล่ม', 'ตอน', 'ประเภท', 'หน้า', 'เล่มที่')
+                    const hashId = hash(row.slice(2, 7))
 
-                    // skip if id exists
-                    if (rows.some(r => r[8].localeCompare(id) === 0)) return
+                    // skip if the id exists
+                    let updateIndex = -1
+                    const exist = rows.some((r, index) => {
+                        if (r[8].localeCompare(hashId) === 0) {
+                            // check if pdf url updated
+                            if (r[7] != row[7]) {
+                                updateIndex = index
+                            }
+                            return true
+                        }
+                        return false
+                    })
+                    if (exist) {
+                        if (updateIndex >= 0) {
+                            console.log(`found a ducument update ${row}`)
+                            rows[updateIndex][0] = row[0]
+                            rows[updateIndex][1] = row[1]
+                            rows[updateIndex][7] = row[7]
+                        }
+                        return
+                    }
 
                     if (oldCSVExists) {
                         console.log(`found a new document ${row}`)
                     }
 
                     // add id column
-                    row.push(id)
+                    row.push(hashId)
                     rows.push(row)
                 })
             })

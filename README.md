@@ -1,6 +1,7 @@
 # Ratchagitja.md
 
 แปลงราชกิจจานุเบกษา ให้เป็นรูปแบบที่คอมพิวเตอร์อ่านและประมวลผลต่อได้ง่ายขึ้น
+![Ratchagitja Midjourney Cover](https://user-images.githubusercontent.com/120288249/226180290-3895cbe7-bbd5-47f1-aacd-7b5b138b9137.jpg)
 
 ## Rules
 

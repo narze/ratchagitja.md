@@ -32,3 +32,28 @@ jobs:
             git commit -m "docs: auto update ratchakitcha.csv"
             git push
           fi
+  extract:
+    needs: scrape # wait scrape finished
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "pnpm"
+          cache-dependency-path: ./extractor/pnpm-lock.yaml
+      - run: pnpm install
+        working-directory: ./extractor
+      - run: pnpm run extract
+        working-directory: ./extractor
+      - name: commit files
+        run: |
+          git config --local user.email "ratchagitja@users.noreply.github.com"
+          git config --local user.name "ratchagitja"
+          git add ./entries/**/*.md
+          if ! git diff-index --quiet HEAD ./entries/**/*.md; then
+            git commit -m "docs: auto entries"
+            git push
+          fi

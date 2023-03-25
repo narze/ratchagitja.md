@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "scraper ratchakitcha from the website",
   "scripts": {
-    "scrape": "ts-node ./src/index.ts"
+    "scrape": "tsx ./src/index.ts"
   },
   "author": "ntsd",
   "dependencies": {
@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@types/fb": "^0.0.28",
-    "ts-node": "^10.9.1",
+    "tsx": "^3.12.6",
     "typescript": "^4.9.5"
   }
 }

@@ -1,18 +1,18 @@
 
 import xlsx from 'node-xlsx';
 import { parse as dateParse } from 'date-fns'
+import { headerIdx, Row, Rows } from './type';
+import { filterByStartWith } from './filter';
 const fs = require("fs");
 const path = require('path');
 const hash = require('object-hash');
 
 const csvPath = '../data/ratchakitcha.csv';
+const filteredCSVPath = '../data/ratchakitcha_filtered.csv';
 
-type Row = [string, string, string, string, string, string, string, string, string];
-export type Rows = Row[];
+const headers: Row = ['วันที่', 'เรื่อง', 'เล่ม', 'ตอน', 'ประเภท', 'หน้า', 'เล่มที่', 'URL', 'id'];
 
-export async function excelToCSV(excelDirPath: string): Promise<Rows|void> {
-    const headers: Row = ['วันที่', 'เรื่อง', 'เล่ม', 'ตอน', 'ประเภท', 'หน้า', 'เล่มที่', 'URL', 'id'];
-
+export async function excelToCSV(excelDirPath: string): Promise<Rows | void> {
     let rows: Rows = [];
     let newDocs: Rows = [];
 
@@ -33,6 +33,11 @@ export async function excelToCSV(excelDirPath: string): Promise<Rows|void> {
         rows = oldCSVRows
     }
 
+    let idMap = {};
+    rows.forEach((row, index) => {
+        idMap[row[headerIdx.id]] = index
+    })
+
     fs.readdirSync(excelDirPath, { withFileTypes: true, defval: "" })
         .filter(item => !item.isDirectory())
         .filter(item => item.name.endsWith('.xlsx'))
@@ -47,35 +52,29 @@ export async function excelToCSV(excelDirPath: string): Promise<Rows|void> {
                     let row: Row = rawRow.map(col => col.toString()) as Row
 
                     // clean title that can break the csv
-                    if (row[1]) {
-                        row[1] = row[1].replace(/(\r\n|\n|\r|\,)/gm, '')
+                    if (row[headerIdx.title]) {
+                        row[headerIdx.title] = row[headerIdx.title].replace(/(\r\n|\n|\r|\,)/gm, '')
                     }
 
                     // generate id by hash ('เล่ม', 'ตอน', 'ประเภท', 'หน้า', 'เล่มที่')
                     const hashId = hash(row.slice(2, 7))
 
-                    // skip if the id exists
-                    let updateIndex = -1
-                    const exist = rows.some((r, index) => {
-                        if (r[8].localeCompare(hashId) === 0) {
-                            // check if pdf url updated
-                            if (r[7] != row[7]) {
-                                updateIndex = index
-                            }
-                            return true
+                    // skip if the id existing
+                    if (idMap[hashId] != undefined) {
+                        const oldIndex = idMap[hashId];
+
+                        if (row[headerIdx.url] != rows[oldIndex][headerIdx.url]) {
+                            // update document if the url changed
+                            console.log(`found a document update ${row}`)
+                            
+                            rows[oldIndex][headerIdx.date] = row[headerIdx.date]
+                            rows[oldIndex][headerIdx.title] = row[headerIdx.title]
+                            rows[oldIndex][headerIdx.url] = row[headerIdx.url]
                         }
-                        return false
-                    })
-                    if (exist) {
-                        if (updateIndex >= 0) {
-                            console.log(`found a ducument update ${row}`)
-                            rows[updateIndex][0] = row[0]
-                            rows[updateIndex][1] = row[1]
-                            rows[updateIndex][7] = row[7]
-                        }
+
                         return
                     }
-
+                    
                     // add id column
                     row.push(hashId)
 
@@ -91,11 +90,11 @@ export async function excelToCSV(excelDirPath: string): Promise<Rows|void> {
 
     // sort csv by multi factors
     rows = rows.sort((a, b) => {
-        const dateAStr = a[0]
-        const dateBStr = b[0]
+        const dateAStr = a[headerIdx.date]
+        const dateBStr = b[headerIdx.date]
 
-        const dateA = dateParse(dateAStr, 'dd/MM/yyyy', 0);
-        const dateB = dateParse(dateBStr, 'dd/MM/yyyy', 0);
+        const dateA = dateParse(dateAStr, 'dd/MM/yyyy', headerIdx.date);
+        const dateB = dateParse(dateBStr, 'dd/MM/yyyy', headerIdx.date);
 
         // sort by date descending order
         const dateDiff = dateB.getTime() - dateA.getTime()
@@ -103,31 +102,37 @@ export async function excelToCSV(excelDirPath: string): Promise<Rows|void> {
             return dateDiff;
         }
         // sort by 'เล่ม'
-        if (a[2].localeCompare(b[2])) {
-            return parseInt(b[2]) - parseInt(a[2]);
+        if (a[headerIdx.volume].localeCompare(b[headerIdx.volume])) {
+            return parseInt(b[headerIdx.volume]) - parseInt(a[headerIdx.volume]);
         }
         // sort by 'ตอน'
-        if (a[3].localeCompare(b[3])) {
-            return parseInt(b[3]) - parseInt(a[3]);
+        if (a[headerIdx.section].localeCompare(b[headerIdx.section])) {
+            return parseInt(b[headerIdx.section]) - parseInt(a[headerIdx.section]);
         }
         // sort by 'ประเภท'
-        if (a[4].localeCompare(b[4])) {
-            return b[4] > a[4] ? 1 : -1;
+        if (a[headerIdx.category].localeCompare(b[headerIdx.category])) {
+            return b[headerIdx.category] > a[headerIdx.category] ? 1 : -1;
         }
         // sort by 'หน้า'
-        if (a[5].localeCompare(b[5])) {
-            return parseInt(b[5]) - parseInt(a[5]);
+        if (a[headerIdx.page].localeCompare(b[headerIdx.page])) {
+            return parseInt(b[headerIdx.page]) - parseInt(a[headerIdx.page]);
         }
         // sort by 'id'
-        return b[8] > a[8] ? 1 : -1;
+        return b[headerIdx.id] > a[headerIdx.id] ? 1 : -1;
     })
 
     // add headers
     rows = [headers, ...rows]
 
-    // generate csv
-    const csv = rows.map(row => row.join(',')).join('\n')
-    fs.writeFileSync(csvPath, csv, 'utf8');
+    const filteredRows = filterByStartWith(rows)
 
-    return newDocs;
+    // generate csv
+    fs.writeFileSync(csvPath, rows.map(row => row.join(',')).join('\n'), 'utf8');
+
+    // generate filtered csv
+    if (filteredRows) {
+        fs.writeFileSync(filteredCSVPath, filteredRows.map(row => row.join(',')).join('\n'), 'utf8');
+    }
+
+    return filterByStartWith(newDocs);
 }

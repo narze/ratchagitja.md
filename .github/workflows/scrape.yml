@@ -21,6 +21,8 @@ jobs:
         working-directory: ./scraper
       - run: npm run scrape
         working-directory: ./scraper
+        env:
+          FB_TOKEN: ${{ secrets.FB_TOKEN }}
       - name: commit file
         run: |
           git config --local user.email "ratchagitja@users.noreply.github.com"

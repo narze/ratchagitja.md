@@ -1,5 +1,5 @@
 import FB from 'fb';
-import { Rows } from './csv';
+import { headerIdx, Rows } from './type';
 
 export async function post(newDocs: Rows) {
     const fbToken = process.env.FB_TOKEN;
@@ -11,12 +11,9 @@ export async function post(newDocs: Rows) {
 
     let message = `ราชกิจจามาใหม่แล้วจ้า!!\n\n`;
     newDocs.forEach((newDoc) => {
-        // ['วันที่', 'เรื่อง', 'เล่ม', 'ตอน', 'ประเภท', 'หน้า', 'เล่มที่', 'URL', 'id']
-        message += `${newDoc[0]} ${newDoc[1]} ${newDoc[7]}\n\n`;
+        message += `${newDoc[headerIdx.date]} ${newDoc[headerIdx.title]} ${newDoc[headerIdx.url]}\n\n`;
     })
     message + `#ราชกิจจานุเบกษา #ratchakitcha`
-
-    console.log(message);
 
     FB.api('ratchagitja/feed', 'post', {
         batch: [

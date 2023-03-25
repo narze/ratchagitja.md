@@ -5,8 +5,7 @@
             "dom"
         ],
         "target": "esnext",
-        "module": "commonjs",
-        "outDir": "dist"
+        "module": "commonjs"
     },
     "include": [
         "src"

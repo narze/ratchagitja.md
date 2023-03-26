@@ -28,8 +28,8 @@
 
 ```mermaid
 C4Component
-  System_Ext(ratchakitcha, "Ratchakitcha Website")
   System_Ext(facebook, "Facebook")
+  System_Ext(ratchakitcha, "Ratchakitcha Website")
 
   Boundary(b1, "Ratchagitja systems") {
     System(scraper, "Scraper")
@@ -42,9 +42,15 @@ C4Component
   }
 
   Rel(scraper, ratchakitcha, "download Excel")
+  UpdateRelStyle(scraper, ratchakitcha, $offsetY="-50")
   Rel(scraper, facebook, "craete post")
+  UpdateRelStyle(scraper, facebook, $offsetY="-50")
   Rel(scraper, csv, "generate")
+  Rel(extractor, ratchakitcha, "download PDF")
+  UpdateRelStyle(extractor, ratchakitcha, $offsetY="-50")
   Rel(extractor, markdown, "generate")
+
+  UpdateLayoutConfig($c4ShapeInRow="2", $c4BoundaryInRow="1")
 ```
 
 # Workflows
@@ -84,7 +90,7 @@ flowchart TB
 |   │   ├── 139                          - volumes directories
 |   │   │   ├── 61                       - sections directories
 |   │   │   │   ├── 17224570.md          - ratchakitcha Markdown file
-├── extractor                            - extractor script for download PDF and extract to Markdown files           
+├── extractor                            - extractor script for download PDF and extract to Markdown files
 └── scraper                              - scraper script for download Excel and parser to CSV
 ```
 

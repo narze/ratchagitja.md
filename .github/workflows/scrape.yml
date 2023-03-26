@@ -42,11 +42,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: "pnpm"
-          cache-dependency-path: ./extractor/pnpm-lock.yaml
-      - run: pnpm install
+          cache: "npm"
+          cache-dependency-path: ./extractor/package-lock.json
+      - run: npm install
         working-directory: ./extractor
-      - run: pnpm run extract
+      - run: npm run extract
         working-directory: ./extractor
       - name: commit files
         run: |

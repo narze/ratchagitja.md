@@ -28,11 +28,11 @@
 
 ```mermaid
 C4Component
-  System_Ext(facebook, "Facebook")
+  System_Ext(facebook, "Facebook API")
   System_Ext(ratchakitcha, "Ratchakitcha Website")
-  Boundary(b1, "Ratchagitja systems") {
-    System(scraper, "Scraper")
-    System(extractor, "Extractor")
+  Boundary(b1, "Ratchagitja") {
+    System(scraper, "Scraper", "Github Action")
+    System(extractor, "Extractor", "Github Action")
   }
   Boundary(b2, "Git repository") {
     ComponentDb(csv, "CSV file")
@@ -43,6 +43,7 @@ C4Component
   Rel(scraper, facebook, "create post")
   UpdateRelStyle(scraper, facebook, $offsetY="-50")
   Rel(scraper, csv, "generate")
+  Rel(extractor, csv, "read CSV")
   Rel(extractor, ratchakitcha, "download PDF")
   UpdateRelStyle(extractor, ratchakitcha, $offsetY="-50")
   Rel(extractor, markdown, "generate")
@@ -55,9 +56,9 @@ C4Component
 flowchart TB
   subgraph Scraper
     download(Download Excel)
-    convert(Convert to CSV)
+    convert(Update to CSV)
     filters(Filter CSV)
-    post(Post to Facebook)
+    post(Post changes to Facebook)
     download --> convert
     convert --> filters
     filters --> post

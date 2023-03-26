@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  scrape:
+  scrape-extract:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -23,22 +23,6 @@ jobs:
         working-directory: ./scraper
         env:
           FB_TOKEN: ${{ secrets.FB_TOKEN }}
-      - name: commit file
-        run: |
-          git config --local user.email "ratchagitja@users.noreply.github.com"
-          git config --local user.name "ratchagitja"
-          git add ./data/ratchakitcha.csv
-          if ! git diff-index --quiet HEAD ./data/ratchakitcha.csv; then
-            git commit -m "docs: auto update ratchakitcha.csv"
-            git push
-          fi
-  extract:
-    needs: scrape # wait scrape finished
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -48,12 +32,13 @@ jobs:
         working-directory: ./extractor
       - run: npm run extract
         working-directory: ./extractor
-      - name: commit files
+      - name: commit file
         run: |
           git config --local user.email "ratchagitja@users.noreply.github.com"
           git config --local user.name "ratchagitja"
+          git add ./data/ratchakitcha*.csv
           git add ./entries/**/*.md
-          if ! git diff-index --quiet HEAD ./entries/**/*.md; then
-            git commit -m "docs: auto entries"
+          if ! git diff-index --quiet HEAD ./data/ratchakitcha*.csv; then
+            git commit -m "docs: auto update ratchakitcha"
             git push
           fi

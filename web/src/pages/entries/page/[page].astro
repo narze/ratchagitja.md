@@ -1,13 +1,23 @@
 ---
-import BaseHead from '../../components/BaseHead.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
-import { getCollection } from 'astro:content';
-import FormattedDate from '../../components/FormattedDate.astro';
+import { Fragment } from "astro/dist/runtime/server";
+import { getCollection } from "astro:content"
+import BaseHead from "../../../components/BaseHead.astro";
+import Footer from "../../../components/Footer.astro";
+import Header from "../../../components/Header.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../../consts";
 
-const entries = (await getCollection('ratchagitja')).slice(0, 50)
+
+export async function getStaticPaths({ paginate }) {
+  const entries = (
+    await getCollection("ratchagitja")
+  )
+
+  return paginate(entries, { pageSize: 50 })
+}
+// All paginated data is passed on the "page" prop
+const { page } = Astro.props
 ---
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -99,6 +109,29 @@ const entries = (await getCollection('ratchagitja')).slice(0, 50)
 					}
 				</ul>
 			</section>
+
+
+    <nav class="flex justify-between mt-8">
+      {
+        page.url.prev ? (
+          <a href={page.url.prev} class="no-underline">
+            ← Prev
+          </a>
+        ) : (
+          <div />
+        )
+      }
+      <span>{page.currentPage}</span>
+      {
+        page.url.next ? (
+          <a href={page.url.next} class="no-underline">
+            Next →
+          </a>
+        ) : (
+          <div />
+        )
+      }
+    </nav>
 		</main>
 		<Footer />
 	</body>

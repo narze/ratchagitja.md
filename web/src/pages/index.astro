@@ -1,0 +1,38 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+// const posts = await Astro.glob('../../../entries/*.md'); // returns an array of posts that live at ./src/pages/post/*.md
+
+// console.log({posts})
+const posts: any[] = []
+
+---
+
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header title={SITE_TITLE} />
+		<main>
+      {posts.slice(0, 20).map((post) => (
+        <article>
+          <h2>{post.frontmatter.name}</h2>
+          <p>Date: {post.frontmatter.date}</p>
+          <p>Category: {post.frontmatter.category}</p>
+          <p>Volume: {post.frontmatter.volume}</p>
+          <p>Section: {post.frontmatter.section}</p>
+          <p>Page: {post.frontmatter.page}</p>
+          <p>Source: {post.frontmatter.source}</p>
+          <a href={post.url}>Read more</a>
+        </article>
+      ))}
+		</main>
+		<Footer />
+	</body>
+</html>

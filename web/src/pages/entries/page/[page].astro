@@ -97,9 +97,11 @@ const { page } = Astro.props
 		<Header />
 		<main>
 			<section>
+        <h2>Page {page.currentPage}</h2>
+
 				<ul>
 					{
-						entries.map((entry) => (
+						page.data.map((entry) => (
 							<li>
 								<a href={`/entries/${entry.slug}`}>
 									<h4 class="title">{entry.data.เรื่อง || entry.data.name}</h4>
@@ -110,28 +112,27 @@ const { page } = Astro.props
 				</ul>
 			</section>
 
-
-    <nav class="flex justify-between mt-8">
-      {
-        page.url.prev ? (
-          <a href={page.url.prev} class="no-underline">
-            ← Prev
-          </a>
-        ) : (
-          <div />
-        )
-      }
-      <span>{page.currentPage}</span>
-      {
-        page.url.next ? (
-          <a href={page.url.next} class="no-underline">
-            Next →
-          </a>
-        ) : (
-          <div />
-        )
-      }
-    </nav>
+      <nav class="flex justify-between mt-8">
+        {
+          page.url.prev ? (
+            <a href={page.url.prev} class="no-underline">
+              ← Prev
+            </a>
+          ) : (
+            <div />
+          )
+        }
+        <span>{page.currentPage}</span>
+        {
+          page.url.next ? (
+            <a href={page.url.next} class="no-underline">
+              Next →
+            </a>
+          ) : (
+            <div />
+          )
+        }
+      </nav>
 		</main>
 		<Footer />
 	</body>

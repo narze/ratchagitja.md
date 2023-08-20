@@ -6,7 +6,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 
-const entries = (await getCollection('ratchagitja')).slice(0, 50)
+const entries = (await getCollection('ratchagitja'))
 ---
 
 <!DOCTYPE html>
@@ -89,7 +89,7 @@ const entries = (await getCollection('ratchagitja')).slice(0, 50)
 			<section>
 				<ul>
 					{
-						entries.map((entry) => (
+						entries.slice(0, 50).map((entry) => (
 							<li>
 								<a href={`/entries/${entry.slug}`}>
 									<h4 class="title">{entry.data.เรื่อง || entry.data.name}</h4>
@@ -99,6 +99,16 @@ const entries = (await getCollection('ratchagitja')).slice(0, 50)
 					}
 				</ul>
 			</section>
+
+      {
+        entries.length > 50 && (
+          <nav class="flex justify-end mt-8">
+            <a href={"/entries/page/2"} class="no-underline">
+              Next →
+            </a>
+          </nav>
+        )
+      }
 		</main>
 		<Footer />
 	</body>
